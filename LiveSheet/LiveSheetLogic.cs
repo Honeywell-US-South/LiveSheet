@@ -42,7 +42,7 @@ public class LiveSheetLogic
             return;
 
         bool success = false;
-        if (obj is LiveNode node)
+        if (obj is LiveNode node && node.GetOutputPorts().Any(x => x.HasLinks()))
         {
             success = node.TryUpdate();
         }

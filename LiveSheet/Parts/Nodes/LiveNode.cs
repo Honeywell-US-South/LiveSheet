@@ -12,6 +12,7 @@ namespace LiveSheet.Parts.Nodes;
 public abstract class LiveNode : NodeModel, IDisposable
 {
     private BsonValue _value = BsonValue.Null;
+    public virtual bool AllowForInputPortGrowth { get; private set; } = false;
 
     public void SilentSetValue(BsonValue value)
     {

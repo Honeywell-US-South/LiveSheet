@@ -13,7 +13,7 @@ public abstract class LivePort : PortModel
         input ? PortAlignment.Left : PortAlignment.Right)
     {
         IsInput = input;
-        Guid = $"port-{parent.Ports.Count}";
+        Guid = $"port-{(IsInput ? "input" : "output")} {parent.Ports.Count}";
         SingularInputOnly = singularInputOnly;
         Name = name ?? string.Empty;
         BoundProperty = boundProperty;
