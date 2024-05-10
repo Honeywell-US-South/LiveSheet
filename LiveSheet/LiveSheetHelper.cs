@@ -302,20 +302,22 @@ public static class LiveSheetHelper
                 nodeDeserializtionFailure = true;
             }
 
-            if (!nodeDeserializtionFailure) continue;
-            try
+            if (!nodeDeserializtionFailure)
             {
-                var nodeLinks =
-                    JsonConvert.DeserializeObject<List<LiveLink>>(node["LiveLinks"].ToString() ?? string.Empty);
-
-                if (nodeLinks != null && nodeLinks.Any())
+                try
                 {
-                    links.AddRange(nodeLinks);
+                    var nodeLinks =
+                        JsonConvert.DeserializeObject<List<LiveLink>>(node["LiveLinks"].ToString() ?? string.Empty);
+
+                    if (nodeLinks != null && nodeLinks.Any())
+                    {
+                        links.AddRange(nodeLinks);
+                    }
                 }
-            }
-            catch
-            {
-                // Ignore
+                catch
+                {
+                    // Ignore
+                }
             }
         }
 
