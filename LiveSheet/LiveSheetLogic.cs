@@ -16,29 +16,31 @@ public class LiveSheetLogic
     public LiveSheetLogic(LiveSheetDiagram diagram)
     {
         this.Diagram = diagram;
-    }
-
-    public void EnableLogic()
-    {
-        if (Enabled) return;
         this.Diagram.Nodes.Added += NodeAdded;
         this.Diagram.Nodes.Removed += NodeRemoved;
         this.Diagram.Links.Added += OnLinkAdded;
         this.Diagram.Links.Removed += OnLinkRemoved;
     }
 
+    public void EnableLogic()
+    {
+        if (Enabled) return;
+
+        Enabled = true;
+    }
+
     public void DisableLogic()
     {
         if (!Enabled) return;
-        Diagram.Nodes.Added -= NodeAdded;
-        Diagram.Nodes.Removed -= NodeRemoved;
-        Diagram.Links.Added -= OnLinkAdded;
-        Diagram.Links.Removed -= OnLinkRemoved;
+        Enabled = false;
     }
 
 
     private void OnValueChanged(NodeModel obj)
     {
+        if (!Enabled)
+            return;
+
         bool success = false;
         if (obj is LiveNode node)
         {
@@ -136,6 +138,9 @@ public class LiveSheetLogic
 
     public void Dispose()
     {
-        DisableLogic();
+        Diagram.Nodes.Added -= NodeAdded;
+        Diagram.Nodes.Removed -= NodeRemoved;
+        Diagram.Links.Added -= OnLinkAdded;
+        Diagram.Links.Removed -= OnLinkRemoved;
     }
 }

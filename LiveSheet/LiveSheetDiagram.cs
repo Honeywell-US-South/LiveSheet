@@ -93,8 +93,8 @@ public class LiveSheetDiagram : BlazorDiagram
         {
             if (!_logic.Enabled)
             {
-                this.LoadLiveSheetData(Data);
                 _logic.EnableLogic();
+                this.LoadLiveSheetData(Data);
             }
 
             State = LiveSheetState.Loaded;
