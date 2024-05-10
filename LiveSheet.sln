@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSheet", "LiveSheet\LiveSheet.csproj", "{F6CE269F-C6BC-4449-A74B-40B797CB71F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livesheet.Demo", "Livesheet.Demo\Livesheet.Demo.csproj", "{3B10223B-48B9-445C-812F-048E00B883C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6CE269F-C6BC-4449-A74B-40B797CB71F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6CE269F-C6BC-4449-A74B-40B797CB71F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6CE269F-C6BC-4449-A74B-40B797CB71F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6CE269F-C6BC-4449-A74B-40B797CB71F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B10223B-48B9-445C-812F-048E00B883C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B10223B-48B9-445C-812F-048E00B883C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B10223B-48B9-445C-812F-048E00B883C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B10223B-48B9-445C-812F-048E00B883C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

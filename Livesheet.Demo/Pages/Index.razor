@@ -1,0 +1,54 @@
+﻿@page "/"
+@using Blazor.Diagrams.Components
+@using Blazor.Diagrams.Components.Widgets
+@using Blazor.Diagrams.Core.Geometry
+@using Livesheet.Demo.Components.Nodes
+@using Livesheet.Demo.Components.Widgets
+@using LiveSheet
+
+<PageTitle>Index</PageTitle>
+<div class="wiresheet-container">
+    <CascadingValue Value="@_liveSheet" IsFixed="false">
+        <DiagramCanvas>
+            <Widgets>
+                <GridWidget Size="30" Mode="GridMode.Point" BackgroundColor="white"/>
+                <SelectionBoxWidget/>
+                <NavigatorWidget Width="200" Height="120" Style="position: absolute; background-color: white; border: 1px solid black; bottom: 15px; right: 15px;"/>
+            </Widgets>
+        </DiagramCanvas>
+    </CascadingValue>
+</div>
+
+@code{
+    private LiveSheetDiagram _liveSheet = new();
+
+    protected override void OnInitialized()
+    {
+        var livesheet = new LiveSheetDiagram();
+        livesheet.RegisterComponent<AddNode, BaseWidget>();
+        livesheet.RegisterComponent<NumericNode, BaseWidget>();
+
+        livesheet.AddNode(new AddNode(), position: new Point(50, 0));
+        livesheet.AddNode(new AddNode(), position: new Point(50, 0));
+        livesheet.AddNode(new NumericNode(), position: new Point(0, 50));
+        livesheet.AddNode(new NumericNode(), position: new Point(0, -50));
+        livesheet.Name = "Testing";
+        livesheet.UpdateSaveData();
+        var save = livesheet.SerializeLiveSheet();
+
+        _liveSheet = LiveSheetHelper.DeserializeLiveSheet(save);
+        _liveSheet.RegisterComponent<AddNode, BaseWidget>();
+        _liveSheet.RegisterComponent<NumericNode, BaseWidget>();
+        _liveSheet.Load();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _liveSheet.FitToScreen();
+        }
+    }
+
+
+}

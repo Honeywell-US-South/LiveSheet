@@ -1,0 +1,38 @@
+@using LiveSheet.Parts.Nodes
+@using Blazor.Diagrams.Components.Renderers
+<div class="wiresheet-node">
+    <div class="wiresheet-node-header">
+        @Node.GetNodeDisplayName()
+    </div>
+    <div class="wiresheet-node-body">
+        <div class="wiresheet-node-body-container">
+            <div class="wiresheet-node-body-inputs">
+                @foreach (var p in Node.GetInputPorts())
+                {
+                    <PortRenderer Port="@p" Class="@(p.PortType.ToString())"/>
+                }
+            </div>
+            <div class="wiresheet-node-body-content" @key=Node.Value>
+                @Node.Value.RawValue.ToString()
+            </div>
+            <div class="wiresheet-node-body-outputs">
+                @foreach (var p in Node.GetOutputPorts())
+                {
+                    <PortRenderer Port="@p" Class="@(p.PortType.ToString())"/>
+                }
+            </div>
+        </div>
+
+
+    </div>
+    <div class="wiresheet-node-footer">
+
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public LiveNode Node { get; set; } = default!;
+
+
+}

@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Project" pattern="file:Livesheet.Demo/wwwroot/css//*||file:Livesheet.Demo/wwwroot/css/livesheet.scss" />
+</component>
