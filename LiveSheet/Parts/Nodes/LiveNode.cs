@@ -6,6 +6,7 @@ using LiteDB;
 using LiveSheet.Parts.Links;
 using LiveSheet.Parts.Ports;
 using LiveSheet.Parts.Serialization;
+using System.Collections.Concurrent;
 
 namespace LiveSheet.Parts.Nodes;
 
@@ -61,10 +62,11 @@ public abstract class LiveNode : NodeModel, IDisposable
         get => _value;
         set
         {
-            if (Value == value)
-                return;
-            _value = value;
-            LastUpdate = DateTime.Now.ToUniversalTime();
+            if (Value != value)
+            {
+                _value = value;
+                LastUpdate = DateTime.Now.ToUniversalTime();
+            }
             ValueChanged?.Invoke(this);
             OnValueChanged(value);
         }
@@ -85,7 +87,7 @@ public abstract class LiveNode : NodeModel, IDisposable
         return false;
     }
 
-    public virtual void Process()
+    public virtual void Process(List<EffectedNode>? effectedNodes = null)
     {
     }
 
@@ -145,13 +147,33 @@ public abstract class LiveNode : NodeModel, IDisposable
         {
             var outputs = GetOutputPorts();
             var links = outputs.SelectMany(p => p.Links).ToList();
-            foreach (var link in links)
+            List<EffectedNode> effectedNodes = new List<EffectedNode>();
+
+            // Initialize a thread-safe collection to hold the results
+            ConcurrentBag<EffectedNode> threadSafeEffectedNodes = new ConcurrentBag<EffectedNode>();
+
+            Parallel.ForEach(links, link =>
+            {
                 if (link.Source is SinglePortAnchor sp && link.Target is SinglePortAnchor tp)
+                {
                     if (sp.Port is LivePort source && tp.Port is LivePort)
                     {
                         var inputPort = source.IsInput ? sp : tp;
-                        if (inputPort.Port.Parent is LiveNode node) node.Process();
+                        if (inputPort.Port.Parent is LiveNode node)
+                            threadSafeEffectedNodes.Add(new EffectedNode(link, node));
                     }
+                }
+            });
+
+            // convert the ConcurrentBag back to collection type
+            effectedNodes = new List<EffectedNode>(threadSafeEffectedNodes);
+
+            //process all notes at once
+            Parallel.ForEach(effectedNodes, node =>
+            {
+                node.Node.Process(effectedNodes);
+            });
+
         }
         catch
         {
