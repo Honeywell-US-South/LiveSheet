@@ -15,7 +15,7 @@ public class LiveStringPort : LivePort
 
     public override bool CanAttachTo(ILinkable other)
     {
-        if (other is not LiveLogicPort)
+        if (other is not LiveStringPort)
         {
             return false;
         }

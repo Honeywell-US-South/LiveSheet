@@ -66,9 +66,10 @@ public abstract class LiveNode : NodeModel, IDisposable
             {
                 _value = value;
                 LastUpdate = DateTime.Now.ToUniversalTime();
+                OnValueChanged(value);
             }
             ValueChanged?.Invoke(this);
-            OnValueChanged(value);
+            
         }
     }
 
@@ -182,4 +183,6 @@ public abstract class LiveNode : NodeModel, IDisposable
 
         return success;
     }
+
+    
 }
