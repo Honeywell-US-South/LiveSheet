@@ -51,7 +51,7 @@ namespace LiveSheet
             }
         }
 
-        public bool IsNull { get { return _isNull && _dateTime == null; } private set { _isNull = value; } }
+        public bool IsNullBson { get { return _isNull && _dateTime == null; } private set { _isNull = value; } }
 
         public static bool IsLiveSheetTime(string liveSheetTimeAsString)
         {
@@ -92,7 +92,7 @@ namespace LiveSheet
 
         public long Difference (LiveSheetTime? timeB)
         {
-            if (timeB == null || (timeB?.IsNull??false)) return AsMilliseconds;
+            if (timeB == null || (timeB?.IsNullBson??false)) return AsMilliseconds;
             if (this._dateTime == null && timeB?._dateTime == null) { return 0; }
             return AsMilliseconds - timeB?.AsMilliseconds??0;
         }
@@ -109,14 +109,14 @@ namespace LiveSheet
         {
             
             var st = new LiveSheetTime(dt?.AsString??"");
-            st.IsNull = dt == null;
+            st.IsNullBson = dt == null;
             return st;
         }
 
         // conversion to DateTime
         public static implicit operator DateTime(LiveSheetTime st)
         {
-
+            
             return st._dateTime??DateTime.Now;
         }
 
