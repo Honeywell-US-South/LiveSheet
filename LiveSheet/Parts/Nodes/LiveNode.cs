@@ -12,6 +12,9 @@ namespace LiveSheet.Parts.Nodes;
 
 public abstract class LiveNode : NodeModel, IDisposable
 {
+
+    public event Action<NodeModel>? SizeChanging;
+
     private BsonValue _value = BsonValue.Null;
     public virtual bool AllowForInputPortGrowth { get; private set; } = false;
 
@@ -62,13 +65,21 @@ public abstract class LiveNode : NodeModel, IDisposable
         get => _value;
         set
         {
-            if (Value != value)
+            try
             {
-                _value = value;
-                LastUpdate = DateTime.Now.ToUniversalTime();
-                OnValueChanged(value);
+                if (Value != value)
+                {
+                    _value = value;
+                    LastUpdate = DateTime.Now.ToUniversalTime();
+                    OnValueChanged(value);
+                }
+                ValueChanged?.Invoke(this);
             }
-            ValueChanged?.Invoke(this);
+            catch
+            {
+
+            }
+ 
             
         }
     }
@@ -184,5 +195,5 @@ public abstract class LiveNode : NodeModel, IDisposable
         return success;
     }
 
-    
+
 }

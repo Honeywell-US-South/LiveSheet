@@ -12,7 +12,7 @@ public class LiveNumericPort : LivePort
 
     public override PortType PortType => PortType.Numeric;
     public decimal GetDecimalValue() => GetBsonValue();
-    public int GetIntValue() => GetBsonValue();
+    public int GetIntValue() => GetBsonValue().AsInt32;
     public double GetDoubleValue() => GetBsonValue();
     public long GetLongValue() => GetBsonValue();
 

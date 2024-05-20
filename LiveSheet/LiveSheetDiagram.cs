@@ -2,6 +2,7 @@ using Blazor.Diagrams;
 using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
+using LiveSheet.Parts.Controls;
 using LiveSheet.Parts.Nodes;
 using LiveSheet.Parts.Serialization;
 
@@ -66,7 +67,7 @@ public class LiveSheetDiagram : BlazorDiagram
     public List<LiveNode> GetLiveNodes() => this.Nodes.Cast<LiveNode>().ToList();
 
 
-    public void Unload()
+    public virtual void Unload()
     {
         if (this.State == LiveSheetState.Loaded)
         {
@@ -87,7 +88,7 @@ public class LiveSheetDiagram : BlazorDiagram
         LiveSheetUpdated?.Invoke(this);
     }
 
-    public void Load()
+    public virtual void Load()
     {
         if (this.State == LiveSheetState.Unloaded)
         {
