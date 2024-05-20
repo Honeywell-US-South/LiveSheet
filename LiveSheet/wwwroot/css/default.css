@@ -1,0 +1,22 @@
+.default-node-resizer {
+  width: 5px;
+  height: 5px;
+  background-color: #f5f5f5;
+  border: 1px solid #6e9fd4;
+  position: absolute;
+  transform: translate(-2.5px, -2.5px);
+}
+.default-node-resizer.topleft, .default-node-resizer.bottomright {
+  cursor: nwse-resize;
+}
+.default-node-resizer.topright, .default-node-resizer.bottomleft {
+  cursor: nesw-resize;
+}
+
+.live-node {
+  position: relative;
+  width: 100px;
+  height: 80px;
+}
+
+/*# sourceMappingURL=default.css.map */

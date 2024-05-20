@@ -2,9 +2,9 @@
 @using Blazor.Diagrams.Components
 @using Blazor.Diagrams.Components.Widgets
 @using Blazor.Diagrams.Core.Geometry
+@using LiveSheet
 @using Livesheet.Demo.Components.Nodes
 @using Livesheet.Demo.Components.Widgets
-@using LiveSheet
 
 <PageTitle>Index</PageTitle>
 <div class="wiresheet-container">
@@ -28,10 +28,10 @@
         livesheet.RegisterComponent<AddNode, BaseWidget>();
         livesheet.RegisterComponent<NumericNode, BaseWidget>();
 
-        livesheet.AddNode(new AddNode(), position: new Point(50, 0));
-        livesheet.AddNode(new AddNode(), position: new Point(50, 0));
-        livesheet.AddNode(new NumericNode(), position: new Point(0, 50));
-        livesheet.AddNode(new NumericNode(), position: new Point(0, -50));
+        livesheet.AddNode(new AddNode(), new Point(50, 0));
+        livesheet.AddNode(new AddNode(), new Point(50, 0));
+        livesheet.AddNode(new NumericNode(), new Point(0, 50));
+        livesheet.AddNode(new NumericNode(), new Point(0, -50));
         livesheet.Name = "Testing";
         livesheet.UpdateSaveData();
         var save = livesheet.SerializeLiveSheet();
@@ -46,7 +46,7 @@
     {
         if (firstRender)
         {
-            _liveSheet.FitToScreen();
+            //_liveSheet.FitToScreen();
         }
     }
 

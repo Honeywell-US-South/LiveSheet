@@ -1,4 +1,3 @@
-using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
@@ -10,17 +9,17 @@ namespace LiveSheet;
 
 public class LiveSheetLogic
 {
-    public LiveSheetDiagram Diagram { get; set; }
-    public bool Enabled { get; private set; } = false;
-
     public LiveSheetLogic(LiveSheetDiagram diagram)
     {
-        this.Diagram = diagram;
-        this.Diagram.Nodes.Added += NodeAdded;
-        this.Diagram.Nodes.Removed += NodeRemoved;
-        this.Diagram.Links.Added += OnLinkAdded;
-        this.Diagram.Links.Removed += OnLinkRemoved;
+        Diagram = diagram;
+        Diagram.Nodes.Added += NodeAdded;
+        Diagram.Nodes.Removed += NodeRemoved;
+        Diagram.Links.Added += OnLinkAdded;
+        Diagram.Links.Removed += OnLinkRemoved;
     }
+
+    public LiveSheetDiagram Diagram { get; set; }
+    public bool Enabled { get; private set; }
 
     public void EnableLogic()
     {
@@ -41,11 +40,8 @@ public class LiveSheetLogic
         if (!Enabled)
             return;
 
-        bool success = false;
-        if (obj is LiveNode node && node.GetOutputPorts().Any(x => x.HasLinks()))
-        {
-            success = node.TryUpdate();
-        }
+        var success = false;
+        if (obj is LiveNode node && node.GetOutputPorts().Any(x => x.HasLinks())) success = node.TryUpdate();
     }
 
     private void OnLinkAdded(BaseLinkModel link)
@@ -79,16 +75,13 @@ public class LiveSheetLogic
                 }
 
                 // If the link is made backwards, reverse it
-                if (sbm.IsInput == true && tbm.IsInput == false)
+                if (sbm.IsInput && tbm.IsInput == false)
                 {
                     Diagram.Links.Remove(link);
                     Diagram.Links.Add(new LinkModel(tbm, sbm));
                 }
 
-                if (tbm.Parent is LiveNode node)
-                {
-                    node.Process();
-                }
+                if (tbm.Parent is LiveNode node) node.Process();
             }
             else
             {
@@ -100,20 +93,12 @@ public class LiveSheetLogic
     private void OnLinkRemoved(BaseLinkModel link)
     {
         if (link.Source.Model is LivePort sp)
-        {
             if (sp.Parent is LiveNode node)
-            {
                 node.Process();
-            }
-        }
 
         if (link.Target.Model is LivePort tp)
-        {
             if (tp.Parent is LiveNode node)
-            {
                 node.Process();
-            }
-        }
 
         link.TargetChanged -= OnLinkTargetChanged;
     }
@@ -121,19 +106,13 @@ public class LiveSheetLogic
 
     private void NodeRemoved(NodeModel node)
     {
-        if (node is LiveNode liveNode)
-        {
-            liveNode.ValueChanged -= OnValueChanged;
-        }
+        if (node is LiveNode liveNode) liveNode.ValueChanged -= OnValueChanged;
     }
 
 
     private void NodeAdded(NodeModel node)
     {
-        if (node is LiveNode liveNode)
-        {
-            liveNode.ValueChanged += OnValueChanged;
-        }
+        if (node is LiveNode liveNode) liveNode.ValueChanged += OnValueChanged;
     }
 
     public void Dispose()

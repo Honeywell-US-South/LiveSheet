@@ -11,17 +11,30 @@ public class LiveNumericPort : LivePort
     }
 
     public override PortType PortType => PortType.Numeric;
-    public decimal GetDecimalValue() => GetBsonValue();
-    public int GetIntValue() => GetBsonValue();
-    public double GetDoubleValue() => GetBsonValue();
-    public long GetLongValue() => GetBsonValue();
+
+    public decimal GetDecimalValue()
+    {
+        return GetBsonValue();
+    }
+
+    public int GetIntValue()
+    {
+        return GetBsonValue().AsInt32;
+    }
+
+    public double GetDoubleValue()
+    {
+        return GetBsonValue();
+    }
+
+    public long GetLongValue()
+    {
+        return GetBsonValue();
+    }
 
     public override bool CanAttachTo(ILinkable other)
     {
-        if (other is not LiveNumericPort)
-        {
-            return false;
-        }
+        if (other is not LiveNumericPort) return false;
 
         return base.CanAttachTo(other);
     }

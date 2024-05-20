@@ -1,0 +1,26 @@
+@using Blazor.Diagrams.Core.Models
+<div class="live-node @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")" style=@GenerateStyle()>
+    @if (Content != null)
+    {
+        @Content
+    }
+</div>
+
+@code {
+
+    [Parameter] public NodeModel Node { get; set; } = null!;
+
+    [Parameter] public RenderFragment? Content { get; set; } = null;
+
+
+    private string GenerateStyle()
+    {
+        if (Node.Size is not null)
+        {
+            return $"width: {Node.Size.Width}px; height: {Node.Size.Height}px";
+        }
+
+        return string.Empty;
+    }
+
+}

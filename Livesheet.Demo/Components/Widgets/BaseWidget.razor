@@ -1,32 +1,37 @@
-@using LiveSheet.Parts.Nodes
 @using Blazor.Diagrams.Components.Renderers
-<div class="wiresheet-node">
-    <div class="wiresheet-node-header">
-        @Node.GetNodeDisplayName()
-    </div>
-    <div class="wiresheet-node-body">
-        <div class="wiresheet-node-body-container">
-            <div class="wiresheet-node-body-inputs">
-                @foreach (var p in Node.GetInputPorts())
-                {
-                    <PortRenderer Port="@p" Class="@(p.PortType.ToString())"/>
-                }
-            </div>
-            <div class="wiresheet-node-body-content" @key=Node.Value>
-                @Node.Value.RawValue.ToString()
-            </div>
-            <div class="wiresheet-node-body-outputs">
-                @foreach (var p in Node.GetOutputPorts())
-                {
-                    <PortRenderer Port="@p" Class="@(p.PortType.ToString())"/>
-                }
-            </div>
+@using Blazor.Diagrams.Core.Models
+@using LiveSheet.Parts.Nodes
+@using LiveSheet.Parts.Components
+
+<div class="live-node @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")" style=@GenerateStyle()>
+    <div class="wiresheet-node">
+        <div class="wiresheet-node-header">
+            @Node.GetNodeDisplayName()
         </div>
+        <div class="wiresheet-node-body">
+            <div class="wiresheet-node-body-container">
+                <div class="wiresheet-node-body-inputs">
+                    @foreach (var p in Node.GetInputPorts())
+                    {
+                        <PortRenderer Port="@p" Class="@(p.PortType.ToString())"/>
+                    }
+                </div>
+                <div class="wiresheet-node-body-content" @key="Node.Value">
+                    @Node.Value.RawValue.ToString()
+                </div>
+                <div class="wiresheet-node-body-outputs">
+                    @foreach (var p in Node.GetOutputPorts())
+                    {
+                        <PortRenderer Port="@p" Class="@(p.PortType.ToString())"/>
+                    }
+                </div>
+            </div>
 
 
-    </div>
-    <div class="wiresheet-node-footer">
+        </div>
+        <div class="wiresheet-node-footer">
 
+        </div>
     </div>
 </div>
 
@@ -34,5 +39,14 @@
 @code {
     [Parameter] public LiveNode Node { get; set; } = default!;
 
+    private string GenerateStyle()
+    {
+        if (Node.Size is not null)
+        {
+            return $"width: {Node.Size.Width}px; height: {Node.Size.Height}px";
+        }
+
+        return string.Empty;
+    }
 
 }
