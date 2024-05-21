@@ -42,7 +42,8 @@ public class LiveSheetDiagram : BlazorDiagram
             DefaultRouter = new NormalRouter(),
             DefaultPathGenerator = new SmoothPathGenerator(),
             SnappingRadius = 4,
-            EnableSnapping = true
+            EnableSnapping = false,
+            RequireTarget = true
         }
     };
 
@@ -67,6 +68,21 @@ public class LiveSheetDiagram : BlazorDiagram
     public List<LiveNode> GetLiveNodes()
     {
         return Nodes.Cast<LiveNode>().ToList();
+    }
+
+    public bool IsReadOnly { get; private set; } = false;
+
+    public void ReadOnlyEnable(bool readOnly)
+    {
+        if (IsReadOnly == readOnly) return;
+        if (readOnly)
+        {
+            this.Nodes.ToList().ForEach(x => x.Locked = true);
+        }
+        else
+        {
+            this.Nodes.ToList().ForEach(x => x.Locked = true);
+        }
     }
 
 

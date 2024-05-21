@@ -34,7 +34,6 @@ public class LiveSheetLogic
         Enabled = false;
     }
 
-
     private void OnValueChanged(NodeModel obj)
     {
         if (!Enabled)
@@ -78,10 +77,13 @@ public class LiveSheetLogic
                 if (sbm.IsInput && tbm.IsInput == false)
                 {
                     Diagram.Links.Remove(link);
-                    Diagram.Links.Add(new LinkModel(tbm, sbm));
+                    var newLink = Diagram.Links.Add(new LinkModel(tbm, sbm));
+                    OnLinkTargetChanged(newLink, newLink.Source, newLink.Target);
                 }
-
-                if (tbm.Parent is LiveNode node) node.Process();
+                else
+                {
+                    if (tbm.Parent is LiveNode node) node.Process();
+                }
             }
             else
             {

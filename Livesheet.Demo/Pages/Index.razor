@@ -25,28 +25,37 @@
     protected override void OnInitialized()
     {
         var livesheet = new LiveSheetDiagram();
-        livesheet.RegisterComponent<AddNode, BaseWidget>();
-        livesheet.RegisterComponent<NumericNode, BaseWidget>();
-
-        livesheet.AddNode(new AddNode(), new Point(50, 0));
-        livesheet.AddNode(new AddNode(), new Point(50, 0));
-        livesheet.AddNode(new NumericNode(), new Point(0, 50));
-        livesheet.AddNode(new NumericNode(), new Point(0, -50));
-        livesheet.Name = "Testing";
-        livesheet.UpdateSaveData();
-        var save = livesheet.SerializeLiveSheet();
-
-        _liveSheet = LiveSheetHelper.DeserializeLiveSheet(save);
         _liveSheet.RegisterComponent<AddNode, BaseWidget>();
         _liveSheet.RegisterComponent<NumericNode, BaseWidget>();
-        _liveSheet.Load();
+
+        _liveSheet.AddNode(new AddNode(), new Point(50, 0));
+        _liveSheet.AddNode(new AddNode(), new Point(50, 0));
+        _liveSheet.AddNode(new NumericNode(), new Point(0, 50));
+        _liveSheet.AddNode(new NumericNode(), new Point(0, -50));
+
+
+        // livesheet.Name = "Testing";
+        // livesheet.UpdateSaveData();
+        // var save = livesheet.SerializeLiveSheet();
+        //
+        // _liveSheet = LiveSheetHelper.DeserializeLiveSheet(save);
+        // _liveSheet.RegisterComponent<AddNode, BaseWidget>();
+        // _liveSheet.RegisterComponent<NumericNode, BaseWidget>();
+        //
+        // _liveSheet.Load();
+    }
+
+    protected override void OnParametersSet()
+    {
+        _liveSheet.Refresh();
+        _liveSheet.FitToScreen();
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            //_liveSheet.FitToScreen();
+            _liveSheet.FitToScreen();
         }
     }
 

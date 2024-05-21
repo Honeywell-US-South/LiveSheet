@@ -58,6 +58,7 @@ public static class LiveSheetHelper
         return diagram;
     }
 
+
     public static Dictionary<string, object> SerializeNodeProperties(this LiveNode node)
     {
         var properties = new Dictionary<string, object>();
@@ -238,10 +239,10 @@ public static class LiveSheetHelper
 
         var nn = diagram.Nodes.Add(newNode);
 
-        diagram.Controls.AddFor(nn).Add(new ResizeControl(new BottomLeftResizerProvider()));
-        diagram.Controls.AddFor(nn).Add(new ResizeControl(new BottomRightResizerProvider()));
-        diagram.Controls.AddFor(nn).Add(new ResizeControl(new TopLeftResizerProvider()));
-        diagram.Controls.AddFor(nn).Add(new ResizeControl(new TopRightResizerProvider()));
+        // diagram.Controls.AddFor(nn, ControlsType.AlwaysOn).Add(new ResizeControl(new BottomLeftResizerProvider()));
+        // diagram.Controls.AddFor(nn, ControlsType.AlwaysOn).Add(new ResizeControl(new BottomRightResizerProvider()));
+        // diagram.Controls.AddFor(nn, ControlsType.AlwaysOn).Add(new ResizeControl(new TopLeftResizerProvider()));
+        // diagram.Controls.AddFor(nn, ControlsType.AlwaysOn).Add(new ResizeControl(new TopRightResizerProvider()));
 
 
         return nn;
