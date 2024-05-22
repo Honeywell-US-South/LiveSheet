@@ -12,8 +12,6 @@ using LiveSheet.Parts.Serialization;
 using Newtonsoft.Json;
 using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core;
-using LiveSheet.Parts.Controls;
-using LiveSheet.Parts.Providers;
 
 namespace LiveSheet;
 
@@ -33,7 +31,7 @@ public static class LiveSheetHelper
             {
                 DefaultRouter = new NormalRouter(),
                 DefaultPathGenerator = new SmoothPathGenerator(),
-                EnableSnapping = true,
+                EnableSnapping = false, // Don't enable snapping - causes issues with false positives
                 SnappingRadius = 4,
                 RequireTarget = true,
                 
@@ -63,11 +61,7 @@ public static class LiveSheetHelper
 
 
         //TODO: Registration 
-        diagram.RegisterComponent<NodeModel, LiveNodeWidget>(replace: true);
-        diagram.RegisterComponent<ResizeControl, ResizeControlWidget>();
-
-
-
+  
         return diagram;
     }
 
@@ -260,12 +254,6 @@ public static class LiveSheetHelper
         }
 
         var nn = diagram.Nodes.Add(newNode);
-
-        diagram.Controls.AddFor(nn, Blazor.Diagrams.Core.Controls.ControlsType.OnSelection).Add(new ResizeControl(new BottomLeftResizerProvider()));
-        diagram.Controls.AddFor(nn, Blazor.Diagrams.Core.Controls.ControlsType.OnSelection).Add(new ResizeControl(new BottomRightResizerProvider()));
-        diagram.Controls.AddFor(nn, Blazor.Diagrams.Core.Controls.ControlsType.OnSelection).Add(new ResizeControl(new TopLeftResizerProvider()));
-        diagram.Controls.AddFor(nn, Blazor.Diagrams.Core.Controls.ControlsType.OnSelection).Add(new ResizeControl(new TopRightResizerProvider()));
-
 
         return nn;
     }

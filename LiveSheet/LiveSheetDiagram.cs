@@ -2,7 +2,6 @@ using Blazor.Diagrams;
 using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
-using LiveSheet.Parts.Controls;
 using LiveSheet.Parts.Nodes;
 using LiveSheet.Parts.Serialization;
 
@@ -40,6 +39,7 @@ public class LiveSheetDiagram : BlazorDiagram
             SnappingRadius = 4,
             EnableSnapping = true
         },
+        Groups = { Enabled = true }
     };
 
 

@@ -63,7 +63,7 @@ public class LiveSheetLogic
         {
             if (sspa.Port is LivePort sbm && tspa.Port is LivePort tbm)
             {
-                // TOOD: Check For Circular Links
+                //Check For Circular Links
                 if (Diagram.CheckForCircularLinks())
                 {
                     Diagram.Links.Remove(link);
@@ -82,9 +82,11 @@ public class LiveSheetLogic
                 if (sbm.IsInput == true && tbm.IsInput == false)
                 {
                     Diagram.Links.Remove(link);
-                    Diagram.Links.Add(new LinkModel(tbm, sbm));
+                    var nl = Diagram.Links.Add(new LinkModel(tbm, sbm));
+                    OnLinkTargetChanged(nl,nl.Source,nl.Target);
+                    return;
                 }
-
+                
                 if (tbm.Parent is LiveNode node)
                 {
                     node.Process();
