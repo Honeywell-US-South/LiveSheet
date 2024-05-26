@@ -54,7 +54,7 @@ internal static class CircularLinkChecker
         foreach (var l in diagram.Links.ToList())
             if (l.Source.Model is LivePort sp && l.Target.Model is LivePort tp)
             {
-                // Get Value Node and Output Node
+                // Get Value Nodes and Output Nodes
                 var sourceIsInput = sp!.IsInput ? true : false;
                 if (sp.Parent is LiveNode sn && tp.Parent is LiveNode tn)
                 {

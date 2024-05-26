@@ -13,7 +13,7 @@ public class LiveSheetDiagram : BlazorDiagram
 
 
     private LiveSheetState _state = LiveSheetState.Unloaded;
-
+    
     public LiveSheetDiagram() : base(DefaultOptions)
     {
         _logic = new LiveSheetLogic(this);
