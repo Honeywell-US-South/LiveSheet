@@ -7,42 +7,38 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="LiteDB" Version="5.0.19"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="LiteDB" Version="5.0.19" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Z.Blazor.Diagrams" Version="3.0.2" />
+        <PackageReference Include="Z.Blazor.Diagrams.Core" Version="3.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="obj\**"/>
-        <Compile Remove="wwwroot\js\**"/>
-        <Content Remove="wwwroot\js\**"/>
+        <Compile Remove="obj\**" />
+        <Compile Remove="wwwroot\js\**" />
+        <Content Remove="wwwroot\js\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Remove="obj\**"/>
-        <EmbeddedResource Remove="wwwroot\js\**"/>
+        <EmbeddedResource Remove="obj\**" />
+        <EmbeddedResource Remove="wwwroot\js\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="obj\**"/>
-        <None Remove="wwwroot\js\**"/>
+        <None Remove="obj\**" />
+        <None Remove="wwwroot\js\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Remove="compilerconfig.json"/>
+        <Content Remove="compilerconfig.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="compilerconfig.json"/>
+        <None Include="compilerconfig.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Parts\Controls\"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\Blazor.Diagrams\src\Blazor.Diagrams.Algorithms\Blazor.Diagrams.Algorithms.csproj"/>
-        <ProjectReference Include="..\..\Blazor.Diagrams\src\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj"/>
-        <ProjectReference Include="..\..\Blazor.Diagrams\src\Blazor.Diagrams\Blazor.Diagrams.csproj"/>
+        <Folder Include="Parts\Controls\" />
     </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@ using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.PathGenerators;
-using Blazor.Diagrams.Core.Positions.Resizing;
+//using Blazor.Diagrams.Core.Positions.Resizing;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
 using LiveSheet.Parts.Links;
