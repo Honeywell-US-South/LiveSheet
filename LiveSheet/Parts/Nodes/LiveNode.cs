@@ -195,5 +195,80 @@ public abstract class LiveNode : NodeModel, IDisposable
         return success;
     }
 
+    public bool OkToProcess(List<EffectedNode>? effectedNodes = null)
+    {
+        var inputPorts = GetInputPorts();
 
+        if (effectedNodes == null) return true;
+        if (effectedNodes?.Count > 0) //has node. Check to see if can process
+        {
+            List<PortModel> checkPorts = new List<PortModel>();
+
+            //find self (port activated the update) and exclude from check for parent
+            foreach (var port in inputPorts)
+            {
+                if (port.HasLinks())
+                {
+                    var isSelf = effectedNodes.FirstOrDefault(x => x.Link.Source == (port.Links.Count > 0 ? port.Links[0].Source : null));
+                    if (isSelf == null)
+                    {
+                        checkPorts.Add(port);
+                    }
+                }
+            }
+
+
+            if (checkPorts.Count > 0)
+            {
+                foreach (var port in checkPorts) //check these ports
+                {
+                    if (HasEffectedParent(port, effectedNodes ?? new()))
+                    {
+                        return false; //don't do the update at this point
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public static bool HasEffectedParent(PortModel port, List<EffectedNode> effectedNodes)
+    {
+        if ((port.Links.Count > 0 ? port.Links[0].Source : null) is SinglePortAnchor anchor)
+        {
+            if (anchor.Port.Parent is LiveNode parent)
+            {
+                if (parent == null || effectedNodes.Count == 0) return false;
+
+                if (effectedNodes.Any(x => x.Node.Guid == parent.Guid))
+                {
+                    return true;
+                }
+                else
+                {
+                    foreach (var pport in parent.Ports)
+                    {
+                        if (port.Links[0].Source is SinglePortAnchor panchor)
+                        {
+                            if (panchor.Port.Parent is LiveNode grandParent)
+                            {
+                                if (grandParent != parent)
+                                {
+                                    if (HasEffectedParent(pport, effectedNodes ?? new()))
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+
+
+                    }
+
+                }
+            }
+        }
+
+        return false;
+    }
 }
