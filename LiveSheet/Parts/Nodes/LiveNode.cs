@@ -182,6 +182,7 @@ public abstract class LiveNode : NodeModel, IDisposable
                         if (inputPort.Port.Parent is LiveNode node)
                             threadSafeEffectedNodes.Add(new EffectedNode(link, node));
                     }
+                }
             });
 
             // convert the ConcurrentBag back to collection type

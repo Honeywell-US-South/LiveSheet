@@ -84,7 +84,7 @@ public class LiveSheetLogic
                 
                 if (tbm.Parent is LiveNode node)
                 {
-                    if (tbm.Parent is LiveNode node) node.Process();
+                    node.Process();
                 }
             }
             else

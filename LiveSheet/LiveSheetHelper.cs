@@ -242,7 +242,6 @@ public static class LiveSheetHelper
             }
         }
         return diagram.Nodes.Add(newNode);
-        return diagram.Nodes.Add(newNode);
     }
 
     public static void LoadLinks(this LiveSheetDiagram diagram, List<LiveLink> links)

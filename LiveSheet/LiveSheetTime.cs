@@ -49,9 +49,8 @@ public struct LiveSheetTime
                 {
                     if (DateTime.TryParse(parts[1], null, DateTimeStyles.RoundtripKind, out var dt))
                         _dateTime = dt;
-                        }
-                    else _dateTime = null;
                 }
+                else _dateTime = null;
             }
         }
     }
@@ -68,12 +67,13 @@ public struct LiveSheetTime
         {
             var parts = liveSheetTimeAsString.Split("|");
             if (parts.Length == 2)
-                {
+            {
                 if (parts[0].Equals(typeof(LiveSheetTime).Name, StringComparison.OrdinalIgnoreCase))
-                    {
+                {
                     return true;
+                }
+            }
         }
-
         return false;
     }
 
@@ -133,5 +133,4 @@ public struct LiveSheetTime
     }
 
         
-    }
 }
