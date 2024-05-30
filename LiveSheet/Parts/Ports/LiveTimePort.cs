@@ -12,14 +12,19 @@ public class LiveTimePort : LivePort
 
     public override PortType PortType => PortType.Time;
 
-    public LiveSheetTime GetLiveSheetTimeValue() => new LiveSheetTime(GetBsonValue().AsString);
-    public DateTime GetDateValue() => new LiveSheetTime(GetBsonValue().AsString);
+    public LiveSheetTime GetLiveSheetTimeValue()
+    {
+        return new LiveSheetTime(GetBsonValue().AsString);
+    }
+
+    public DateTime GetDateValue()
+    {
+        return new LiveSheetTime(GetBsonValue().AsString);
+    }
+
     public override bool CanAttachTo(ILinkable other)
     {
-        if (other is not LiveTimePort)
-        {
-            return false;
-        }
+        if (other is not LiveTimePort) return false;
 
         return base.CanAttachTo(other);
     }

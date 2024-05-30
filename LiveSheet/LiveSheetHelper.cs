@@ -1,9 +1,14 @@
 ﻿using Blazor.Diagrams;
+using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Controls;
+using Blazor.Diagrams.Core.Controls.Default;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.PathGenerators;
+//using Blazor.Diagrams.Core.Positions.Resizing;
 using Blazor.Diagrams.Core.Routers;
-using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Options;
 using LiveSheet.Parts.Links;
 using LiveSheet.Parts.Nodes;
@@ -18,12 +23,12 @@ namespace LiveSheet;
 public static class LiveSheetHelper
 {
     public static BlazorDiagram NewLiveSheet(
-        Func<Blazor.Diagrams.Core.Diagram, ValueTask>? Save = null,
-        Func<Blazor.Diagrams.Core.Diagram, ValueTask>? Copy = null,
-        Func<Blazor.Diagrams.Core.Diagram, ValueTask>? Paste = null
+        Func<Diagram, ValueTask>? Save = null,
+        Func<Diagram, ValueTask>? Copy = null,
+        Func<Diagram, ValueTask>? Paste = null
     )
     {
-        var options = new BlazorDiagramOptions()
+        var options = new BlazorDiagramOptions
         {
             AllowMultiSelection = true,
             Zoom = { Enabled = true, Inverse = true },
@@ -36,34 +41,28 @@ public static class LiveSheetHelper
                 RequireTarget = true,
                 
             },
-            GridSize = 20,
+            GridSize = 20
         };
 
-        BlazorDiagram diagram = new BlazorDiagram(options);
+        var diagram = new BlazorDiagram(options);
 
         if (diagram.GetBehavior<KeyboardShortcutsBehavior>() is { } kbs)
         {
-            if (Save != null)
-            {
-                kbs.SetShortcut("s", ctrl: true, shift: false, alt: false, Save);
-            }
+            if (Save != null) kbs.SetShortcut("s", true, false, false, Save);
 
-            if (Copy != null)
-            {
-                kbs.SetShortcut("c", ctrl: true, shift: false, alt: false, Copy);
-            }
+            if (Copy != null) kbs.SetShortcut("c", true, false, false, Copy);
 
-            if (Paste != null)
-            {
-                kbs.SetShortcut("v", ctrl: true, shift: false, alt: false, Paste);
-            }
+            if (Paste != null) kbs.SetShortcut("v", true, false, false, Paste);
         }
 
 
         //TODO: Registration 
-  
+
+
+
         return diagram;
     }
+
 
     public static Dictionary<string, object> SerializeNodeProperties(this LiveNode node)
     {
@@ -87,34 +86,34 @@ public static class LiveSheetHelper
 
     public static string SerializeLiveSheet(this LiveSheetDiagram diagram)
     {
-        JsonSerializerSettings settings = new JsonSerializerSettings
+        var settings = new JsonSerializerSettings
         {
             Converters = new List<JsonConverter> { new LiveSheetSerializeConverter() },
             Formatting = Formatting.None // Optional: for nicer output
         };
-        string json = JsonConvert.SerializeObject(diagram, settings);
+        var json = JsonConvert.SerializeObject(diagram, settings);
         return json;
     }
 
     public static LiveSheetDiagram DeserializeLiveSheet(string json)
     {
         if (string.IsNullOrEmpty(json))
-            return new();
+            return new LiveSheetDiagram();
 
         LiveSheetDiagram diagram = new();
 
-        JsonSerializerSettings settings = new JsonSerializerSettings
+        var settings = new JsonSerializerSettings
         {
             Converters = new List<JsonConverter> { new LiveSheetSerializeConverter() },
             Formatting = Formatting.None // Optional: for nicer output
         };
         try
         {
-            diagram = JsonConvert.DeserializeObject<LiveSheetDiagram>(json, settings) ?? new();
+            diagram = JsonConvert.DeserializeObject<LiveSheetDiagram>(json, settings) ?? new LiveSheetDiagram();
         }
         catch
         {
-            diagram = new();
+            diagram = new LiveSheetDiagram();
         }
 
         return diagram;
@@ -163,7 +162,7 @@ public static class LiveSheetHelper
     public static void FitToScreen(this LiveSheetDiagram diagram, int margin = 300)
     {
         var nodes = diagram.Nodes.ToList();
-        GroupModel group = new GroupModel(nodes);
+        var group = new GroupModel(nodes, autoSize: false);
         var temp = diagram.Groups.Add(group);
         diagram.SelectModel(temp, false);
         diagram.ZoomToFit(margin);
@@ -173,7 +172,7 @@ public static class LiveSheetHelper
             var scaledMargin = margin * diagram.Zoom;
             if (diagram.Container != null)
             {
-                var deltaX = (diagram.Container.Width / 2) - (width / 2) - scaledMargin;
+                var deltaX = diagram.Container.Width / 2 - width / 2 - scaledMargin;
                 diagram.UpdatePan(deltaX, 0);
             }
         }
@@ -184,17 +183,12 @@ public static class LiveSheetHelper
 
     public static Point GetCenterOfScreen(this LiveSheetDiagram? diagram)
     {
-        if (diagram == null)
-        {
-            return Point.Zero;
-        }
-        else
-        {
-            if (diagram.Container == null) return Point.Zero;
-            var x = (diagram.Container.Width / 2 - diagram.Pan.X) / diagram.Zoom;
-            var y = (diagram.Container.Height / 2 - diagram.Pan.Y) / diagram.Zoom;
-            return new Point(x, y);
-        }
+        if (diagram == null) return Point.Zero;
+
+        if (diagram.Container == null) return Point.Zero;
+        var x = (diagram.Container.Width / 2 - diagram.Pan.X) / diagram.Zoom;
+        var y = (diagram.Container.Height / 2 - diagram.Pan.Y) / diagram.Zoom;
+        return new Point(x, y);
     }
 
     public static void Clear(this LiveSheetDiagram diagram)
@@ -211,7 +205,7 @@ public static class LiveSheetHelper
 
     public static void CenterOnNode(this LiveSheetDiagram diagram, LiveNode node, double margin = 0)
     {
-        diagram.SelectModel(node, unselectOthers: true);
+        diagram.SelectModel(node, true);
         diagram.ZoomToFit(margin);
 
         if (node.Size != null)
@@ -220,7 +214,7 @@ public static class LiveSheetHelper
             var scaledMargin = margin * diagram.Zoom;
             if (diagram.Container != null)
             {
-                var deltaX = (diagram.Container.Width / 2) - (width / 2) - scaledMargin;
+                var deltaX = diagram.Container.Width / 2 - width / 2 - scaledMargin;
                 diagram.UpdatePan(deltaX, 0);
             }
         }
@@ -229,12 +223,9 @@ public static class LiveSheetHelper
     public static LiveNode? AddNode(this LiveSheetDiagram diagram, LiveNode node, Point? position = null,
         string? nodeData = null)
     {
-        Point point = position != null ? position : diagram.GetCenterOfScreen();
+        var point = position != null ? position : diagram.GetCenterOfScreen();
         LiveNode? newNode = null;
-        if (Activator.CreateInstance(node.GetType()) is LiveNode model)
-        {
-            newNode = model;
-        }
+        if (Activator.CreateInstance(node.GetType()) is LiveNode model) newNode = model;
 
 
         if (newNode == null) return null;
@@ -247,15 +238,11 @@ public static class LiveSheetHelper
             {
                 newNode.Guid = Guid.NewGuid().ToString();
                 if (existing.Position == newNode.Position)
-                {
                     newNode.SetPosition(existing.Position.X + 20, existing.Position.Y - 20);
-                }
             }
         }
-
-        var nn = diagram.Nodes.Add(newNode);
-
-        return nn;
+        return diagram.Nodes.Add(newNode);
+        return diagram.Nodes.Add(newNode);
     }
 
     public static void LoadLinks(this LiveSheetDiagram diagram, List<LiveLink> links)
@@ -271,9 +258,7 @@ public static class LiveSheetHelper
                 var targetPort = targetNode.Ports.Cast<LivePort>().FirstOrDefault(x => x.Guid == link.TargetPortGuid);
 
                 if (sourcePort is { } sourcePortModel && targetPort is { } targetPortModel)
-                {
                     diagram.Links.Add(new LinkModel(sourcePortModel, targetPortModel));
-                }
             }
         }
     }
@@ -288,18 +273,14 @@ public static class LiveSheetHelper
 
         foreach (var node in nodes ?? new List<Dictionary<string, object>>())
         {
-            bool nodeDeserializtionFailure = false;
+            var nodeDeserializtionFailure = false;
             try
             {
                 var nodeType = node["NodeType"].ToString() ?? string.Empty;
                 var type = Type.GetType(nodeType);
                 if (type != null)
-                {
                     if (Activator.CreateInstance(type) is LiveNode model)
-                    {
                         diagram.AddNode(model, nodeData: JsonConvert.SerializeObject(node));
-                    }
-                }
             }
             catch
             {
@@ -307,25 +288,68 @@ public static class LiveSheetHelper
             }
 
             if (!nodeDeserializtionFailure)
-            {
                 try
                 {
                     var nodeLinks =
                         JsonConvert.DeserializeObject<List<LiveLink>>(node["LiveLinks"].ToString() ?? string.Empty);
 
-                    if (nodeLinks != null && nodeLinks.Any())
-                    {
-                        links.AddRange(nodeLinks);
-                    }
+                    if (nodeLinks != null && nodeLinks.Any()) links.AddRange(nodeLinks);
                 }
                 catch
                 {
                     // Ignore
                 }
-            }
         }
 
         diagram.LoadLinks(links);
+    }
+
+    public static bool OkToProcess(this LiveNode node, List<EffectedNode>? effectedNodes = null)
+    {
+        var inputPorts = node.GetInputPorts();
+
+        if (effectedNodes == null) return true;
+        if (effectedNodes?.Count > 0) //has node. Check to see if can process
+        {
+            var checkPorts = new List<PortModel>();
+
+            //find self (port activated the update) and exclude from check for parent
+            foreach (var port in inputPorts)
+                if (port.HasLinks())
+                {
+                    var isSelf = effectedNodes.FirstOrDefault(x =>
+                        x.Link.Source == (port.Links.Count > 0 ? port.Links[0].Source : null));
+                    if (isSelf == null) checkPorts.Add(port);
+                }
+
+
+            if (checkPorts.Count > 0)
+                foreach (var port in checkPorts) //check these ports
+                    if (HasEffectedParent(port, effectedNodes ?? new List<EffectedNode>()))
+                        return false; //don't do the update at this point
+        }
+
+        return true;
+    }
+
+    public static bool HasEffectedParent(PortModel port, List<EffectedNode> effectedNodes)
+    {
+        if ((port.Links.Count > 0 ? port.Links[0].Source : null) is SinglePortAnchor anchor)
+            if (anchor.Port.Parent is LiveNode parent)
+            {
+                if (parent == null || effectedNodes.Count == 0) return false;
+
+                if (effectedNodes.Any(x => x.Node.Guid == parent.Guid))
+                    return true;
+                foreach (var pport in parent.Ports)
+                    if (port.Links[0].Source is SinglePortAnchor panchor)
+                        if (panchor.Port.Parent is LiveNode grandParent)
+                            if (grandParent != parent)
+                                if (HasEffectedParent(pport, effectedNodes ?? new List<EffectedNode>()))
+                                    return true;
+            }
+
+        return false;
     }
 
     

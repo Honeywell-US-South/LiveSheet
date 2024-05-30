@@ -1,4 +1,5 @@
-﻿using LiteDB;
+﻿using System.Globalization;
+using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,124 +8,129 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiveSheet
+namespace LiveSheet;
+
+public struct LiveSheetTime
 {
-    public struct LiveSheetTime
+    private bool _isNull = false;
+    private DateTime? _dateTime;
+
+    public LiveSheetTime()
     {
-        private bool _isNull = false;
-        private DateTime? _dateTime;
+    }
 
-        public LiveSheetTime() { }
+    public LiveSheetTime(DateTime dateTime)
+    {
+        _dateTime = dateTime;
+    }
 
-        public LiveSheetTime(DateTime dateTime)
+    public LiveSheetTime(string liveSheetTimeAsString)
+    {
+        _dateTime = null;
+        if (!string.IsNullOrEmpty(liveSheetTimeAsString))
         {
-            this._dateTime = dateTime;
-        }
-
-        public LiveSheetTime(string liveSheetTimeAsString)
-        {
-            this._dateTime = null;
-            if (!string.IsNullOrEmpty(liveSheetTimeAsString))
+            var parts = liveSheetTimeAsString.Split("|");
+            if (parts.Length == 1)
             {
-                var parts = liveSheetTimeAsString.Split("|");
-                if (parts.Length == 1)
+                if (parts[0].Equals(typeof(LiveSheetTime).Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (parts[0].Equals(typeof(LiveSheetTime).Name, StringComparison.OrdinalIgnoreCase)) this._dateTime = null;
-                    else
-                    {
-                        if (DateTime.TryParse(parts[0], out DateTime dt))
-                        {
-                            _dateTime = dt;
-                        } else _dateTime = null;
-                    }
-                } else if (parts.Length == 2)
+                    _dateTime = null;
+                }
+                else
                 {
-                    if (parts[0].Equals(typeof(LiveSheetTime).Name, StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (DateTime.TryParse(parts[1], null, System.Globalization.DateTimeStyles.RoundtripKind, out DateTime dt))
-                        {
-                            _dateTime = dt;
+                    if (DateTime.TryParse(parts[0], out var dt))
+                        _dateTime = dt;
+                    else _dateTime = null;
+                }
+            }
+            else if (parts.Length == 2)
+            {
+                if (parts[0].Equals(typeof(LiveSheetTime).Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (DateTime.TryParse(parts[1], null, DateTimeStyles.RoundtripKind, out var dt))
+                        _dateTime = dt;
                         }
-                        else _dateTime = null;
-                    }
+                    else _dateTime = null;
                 }
             }
         }
+    }
 
-        public bool IsNullBson { get { return _isNull && _dateTime == null; } private set { _isNull = value; } }
+    public bool IsNullBson
+    {
+        get => _isNull && _dateTime == null;
+        private set => _isNull = value;
+    }
 
-        public static bool IsLiveSheetTime(string liveSheetTimeAsString)
+    public static bool IsLiveSheetTime(string liveSheetTimeAsString)
+    {
+        if (!string.IsNullOrEmpty(liveSheetTimeAsString))
         {
-            if (!string.IsNullOrEmpty(liveSheetTimeAsString))
-            {
-                var parts = liveSheetTimeAsString.Split("|");
-                if (parts.Length == 2)
+            var parts = liveSheetTimeAsString.Split("|");
+            if (parts.Length == 2)
                 {
-                    if (parts[0].Equals(typeof(LiveSheetTime).Name, StringComparison.OrdinalIgnoreCase))
+                if (parts[0].Equals(typeof(LiveSheetTime).Name, StringComparison.OrdinalIgnoreCase))
                     {
-                        return true;
-                    }
-                }
-            }
-            return false;
+                    return true;
         }
 
-        public static LiveSheetTime Now => new LiveSheetTime();
+        return false;
+    }
 
-        public string AsString => $"{typeof(LiveSheetTime).Name}|{(_dateTime?.ToString("O")??"null")}";
+    public static LiveSheetTime Now => new();
 
-        // Override ToString() for simple string conversion
-        public override string ToString()
-        {
-            return _dateTime.ToString()??DateTime.Now.ToString();
-        }
+    public string AsString => $"{typeof(LiveSheetTime).Name}|{_dateTime?.ToString("O") ?? "null"}";
 
-        // Implement IFormattable ToString method for custom formatting
-        public string ToString(string format, IFormatProvider? formatProvider = null)
-        {
-            if (string.IsNullOrEmpty(format)) format = "G"; // Default format
-            if (formatProvider == null) formatProvider = System.Globalization.CultureInfo.CurrentCulture;
+    // Override ToString() for simple string conversion
+    public override string ToString()
+    {
+        return _dateTime.ToString() ?? DateTime.Now.ToString();
+    }
 
-            return _dateTime?.ToString(format, formatProvider)??DateTime.Now.ToString(format, formatProvider);
-        }
+    // Implement IFormattable ToString method for custom formatting
+    public string ToString(string format, IFormatProvider? formatProvider = null)
+    {
+        if (string.IsNullOrEmpty(format)) format = "G"; // Default format
+        if (formatProvider == null) formatProvider = CultureInfo.CurrentCulture;
 
-        public long AsMilliseconds => _dateTime?.Ticks??DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        return _dateTime?.ToString(format, formatProvider) ?? DateTime.Now.ToString(format, formatProvider);
+    }
 
-        public long Difference (LiveSheetTime? timeB)
-        {
-            if (timeB == null || (timeB?.IsNullBson??false)) return AsMilliseconds;
-            if (this._dateTime == null && timeB?._dateTime == null) { return 0; }
-            return AsMilliseconds - timeB?.AsMilliseconds??0;
-        }
+    public long AsMilliseconds => _dateTime?.Ticks ?? DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+    public long Difference(LiveSheetTime? timeB)
+    {
+        if (timeB == null || (timeB?.IsNullBson ?? false)) return AsMilliseconds;
+        if (_dateTime == null && timeB?._dateTime == null) return 0;
+        return AsMilliseconds - timeB?.AsMilliseconds ?? 0;
+    }
 
 
-        // conversion to BsonValue
-        public static implicit operator BsonValue(LiveSheetTime st)
-        {
-            return new($"{typeof(LiveSheetTime).Name}|{(st._dateTime?.ToString("O") ?? "null")}");
-        }
+    // conversion to BsonValue
+    public static implicit operator BsonValue(LiveSheetTime st)
+    {
+        return new BsonValue($"{typeof(LiveSheetTime).Name}|{st._dateTime?.ToString("O") ?? "null"}");
+    }
 
-        // conversion from BsonValue to LiveSheetTime
-        public static implicit operator LiveSheetTime(BsonValue dt)
-        {
-            
-            var st = new LiveSheetTime(dt?.AsString??"");
-            st.IsNullBson = dt == null;
-            return st;
-        }
+    // conversion from BsonValue to LiveSheetTime
+    public static implicit operator LiveSheetTime(BsonValue dt)
+    {
+        var st = new LiveSheetTime(dt?.AsString ?? "");
+        st.IsNullBson = dt == null;
+        return st;
+    }
 
-        // conversion to DateTime
-        public static implicit operator DateTime(LiveSheetTime st)
-        {
-            
-            return st._dateTime??DateTime.Now;
-        }
+    // conversion to DateTime
+    public static implicit operator DateTime(LiveSheetTime st)
+    {
+        return st._dateTime ?? DateTime.Now;
+    }
 
-        // conversion from DateTime to LiveSheetTime
-        public static implicit operator LiveSheetTime(DateTime dt)
-        {
-            return new LiveSheetTime(dt);
-        }
+    // conversion from DateTime to LiveSheetTime
+    public static implicit operator LiveSheetTime(DateTime dt)
+    {
+        return new LiveSheetTime(dt);
+    }
 
         
     }

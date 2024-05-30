@@ -11,14 +11,15 @@ public class LiveStringPort : LivePort
     }
 
     public override PortType PortType => PortType.String;
-    public string GetStringValue() => GetBsonValue();
+
+    public string GetStringValue()
+    {
+        return GetBsonValue();
+    }
 
     public override bool CanAttachTo(ILinkable other)
     {
-        if (other is not LiveStringPort)
-        {
-            return false;
-        }
+        if (other is not LiveStringPort) return false;
 
         return base.CanAttachTo(other);
     }

@@ -11,14 +11,15 @@ public class LiveLogicPort : LivePort
     }
 
     public override PortType PortType => PortType.Logic;
-    public bool GetBooleanValue() => GetBsonValue();
+
+    public bool GetBooleanValue()
+    {
+        return GetBsonValue();
+    }
 
     public override bool CanAttachTo(ILinkable other)
     {
-        if (other is not LiveLogicPort)
-        {
-            return false;
-        }
+        if (other is not LiveLogicPort) return false;
 
         return base.CanAttachTo(other);
     }

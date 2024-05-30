@@ -1,4 +1,5 @@
-﻿using Blazor.Diagrams.Core.Anchors;
+﻿using System.Collections.Concurrent;
+using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
@@ -16,17 +17,13 @@ public abstract class LiveNode : NodeModel, IDisposable
     public event Action<NodeModel>? SizeChanging;
 
     private BsonValue _value = BsonValue.Null;
-    public virtual bool AllowForInputPortGrowth { get; private set; } = false;
-
-    public void SilentSetValue(BsonValue value)
-    {
-        _value = value;
-    }
 
 
     protected LiveNode(Point position) : base(position)
     {
     }
+
+    public virtual bool AllowForInputPortGrowth { get; private set; } = false;
 
 
     [LiveSerialize] public string Guid { get; set; } = System.Guid.NewGuid().ToString();
@@ -40,13 +37,16 @@ public abstract class LiveNode : NodeModel, IDisposable
         set => Position = value;
     }
 
-    [LiveSerialize] public string NodeAlias { get; set; } = string.Empty;
-    public virtual string NodeName { get; private set; } = string.Empty;
-
-    public string GetNodeDisplayName()
+    [LiveSerialize]
+    public Size? NodeSize
     {
-        return string.IsNullOrEmpty(NodeAlias) ? NodeName : NodeAlias;
+        get => Size;
+        set => Size = value;
     }
+
+
+    [LiveSerialize] public string NodeAlias { get; set; } = string.Empty;
+    public virtual string NodeName { get; } = string.Empty;
 
 
     public Action<LiveNode>? ValueChanged { get; set; }
@@ -56,7 +56,7 @@ public abstract class LiveNode : NodeModel, IDisposable
     public object RawValue
     {
         get => _value.RawValue;
-        set => _value = new(value);
+        set => _value = new BsonValue(value);
     }
 
 
@@ -73,20 +73,30 @@ public abstract class LiveNode : NodeModel, IDisposable
                     LastUpdate = DateTime.Now.ToUniversalTime();
                     OnValueChanged(value);
                 }
+
                 ValueChanged?.Invoke(this);
             }
             catch
             {
-
             }
- 
-            
         }
     }
+
+    [LiveSerialize] public List<LiveLink> LiveLinks => GetParentConnections();
 
     public virtual void Dispose()
     {
         // Ignore
+    }
+
+    public void SilentSetValue(BsonValue value)
+    {
+        _value = value;
+    }
+
+    public string GetNodeDisplayName()
+    {
+        return string.IsNullOrEmpty(NodeAlias) ? NodeName : NodeAlias;
     }
 
     public void AddPort(LivePort port)
@@ -107,7 +117,7 @@ public abstract class LiveNode : NodeModel, IDisposable
     protected virtual void OnValueChanged(BsonValue value)
     {
         // Ignore
-        this.Refresh();
+        Refresh();
     }
 
 
@@ -118,12 +128,10 @@ public abstract class LiveNode : NodeModel, IDisposable
         ports.ForEach(port =>
         {
             var links = port.Links.ToList();
-            links.ForEach(link => { l.Add(new(link)); });
+            links.ForEach(link => { l.Add(new LiveLink(link)); });
         });
         return l;
     }
-
-    [LiveSerialize] public List<LiveLink> LiveLinks => GetParentConnections();
 
 
     public virtual BsonValue GetInputValue(LivePort port, LinkModel link)
@@ -159,10 +167,10 @@ public abstract class LiveNode : NodeModel, IDisposable
         {
             var outputs = GetOutputPorts();
             var links = outputs.SelectMany(p => p.Links).ToList();
-            List<EffectedNode> effectedNodes = new List<EffectedNode>();
+            var effectedNodes = new List<EffectedNode>();
 
             // Initialize a thread-safe collection to hold the results
-            ConcurrentBag<EffectedNode> threadSafeEffectedNodes = new ConcurrentBag<EffectedNode>();
+            var threadSafeEffectedNodes = new ConcurrentBag<EffectedNode>();
 
             Parallel.ForEach(links, link =>
             {
@@ -174,18 +182,13 @@ public abstract class LiveNode : NodeModel, IDisposable
                         if (inputPort.Port.Parent is LiveNode node)
                             threadSafeEffectedNodes.Add(new EffectedNode(link, node));
                     }
-                }
             });
 
             // convert the ConcurrentBag back to collection type
             effectedNodes = new List<EffectedNode>(threadSafeEffectedNodes);
 
             //process all notes at once
-            Parallel.ForEach(effectedNodes, node =>
-            {
-                node.Node.Process(effectedNodes);
-            });
-
+            Parallel.ForEach(effectedNodes, node => { node.Node.Process(effectedNodes); });
         }
         catch
         {

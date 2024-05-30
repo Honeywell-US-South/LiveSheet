@@ -43,7 +43,6 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
-    <option name="SIGN_OFF_COMMIT" value="true" />
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="Git.Stage.Ui.Settings">
@@ -55,18 +54,26 @@
     &quot;assignee&quot;: &quot;Duinrahaic&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Duinrahaic/LiveSheet.git&quot;,
-    &quot;accountId&quot;: &quot;73600ebe-e7c9-4b4f-8c89-87ac745d5ddb&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://duinrahaic@github.com/Duinrahaic/LiveSheet.git",
+    "accountId": "73600ebe-e7c9-4b4f-8c89-87ac745d5ddb"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/544c7e6eb3d5525c6f85341f51217d81d7c8ed80/src/coreclr/System.Private.CoreLib/src/System/Runtime/CompilerServices/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/544c7e6eb3d5525c6f85341f51217d81d7c8ed80/src/libraries/System.Private.CoreLib/src/System/Threading/ManualResetEventSlim.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/58f2252d4a4e44148eb2c02e4b272efef800/50/4bd23d26/BlazorDiagram.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5bb4341526944d6880ee26a487c2bb7e1dc00/2f/abb7d76f/NodeModel.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e2e3d26278e439d44964729238a685ad58d3189abf8fb84cdfe34b893a290a2/JsonSerializerInternalWriter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Livesheet.Demo/wwwroot/css/livesheet.css.map" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -94,14 +101,17 @@
     ".NET Launch Settings Profile.Livesheet.Demo: https.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "XThreadsFramesViewSplitterKey": "0.30311614",
     "git-widget-placeholder": "master",
     "list.type.of.created.stylesheet": "SCSS",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.stylelint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.stylelint": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog",
+    "settings.editor.selected.configurable": "watcher.settings",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -164,6 +174,9 @@
     </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\H184318\AppData\Roaming\Subversion</configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="e2059627-23cc-40b9-a2b3-d5690b66d7e5" name="Changes" comment="" />
@@ -176,7 +189,9 @@
       <workItem from="1715005314537" duration="11400000" />
       <workItem from="1715020689820" duration="1165000" />
       <workItem from="1715021882787" duration="14826000" />
-      <workItem from="1715349540870" duration="695000" />
+      <workItem from="1715349540870" duration="941000" />
+      <workItem from="1715350516058" duration="10628000" />
+      <workItem from="1716223993193" duration="9631000" />
     </task>
     <task id="LOCAL-00001" summary="Added functions to handle base Wiresheet Construction">
       <option name="closed" value="true" />
@@ -434,7 +449,47 @@
       <option name="project" value="LOCAL" />
       <updated>1715349903617</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Fixed links not being deserialized">
+      <option name="closed" value="true" />
+      <created>1715355521731</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1715355521731</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Fixed links not being deserialized&#10;&#10;Signed-off-by: Duinrahaic &lt;gman2306@gmail.com&gt;">
+      <option name="closed" value="true" />
+      <created>1715355554831</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1715355554831</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Fixed Guid for port">
+      <option name="closed" value="true" />
+      <created>1715355885683</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1715355885683</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Fixed logic">
+      <option name="closed" value="true" />
+      <created>1715368549577</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1715368549577</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Update OnValueChange to only process if there is an output connection">
+      <option name="closed" value="true" />
+      <created>1715370558588</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1715370558588</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -456,11 +511,6 @@
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Merge remote-tracking branch 'origin/master'" />
-    <MESSAGE value="Added demo project" />
-    <MESSAGE value="Removed unnecessary project" />
-    <MESSAGE value="Updated git ignore&#10;&#10;Signed-off-by: Duinrahaic &lt;gman2306@gmail.com&gt;" />
-    <MESSAGE value="Exclude Objs" />
     <MESSAGE value="Exclude Objs&#10;&#10;Signed-off-by: Duinrahaic &lt;gman2306@gmail.com&gt;" />
     <MESSAGE value="Updated git ignore" />
     <MESSAGE value="Force Push" />
@@ -481,26 +531,13 @@
     <MESSAGE value="Exposed fields for nodes" />
     <MESSAGE value="Adjusted namespaces for LiveSheet&#10;&#10;Signed-off-by: HWJSutton &lt;Johnathan.sutton@honeywell.com&gt;" />
     <MESSAGE value="Adjusted namespaces for LiveSheet" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adjusted namespaces for LiveSheet" />
+    <MESSAGE value="Fixed links not being deserialized" />
+    <MESSAGE value="Fixed links not being deserialized&#10;&#10;Signed-off-by: Duinrahaic &lt;gman2306@gmail.com&gt;" />
+    <MESSAGE value="Fixed Guid for port" />
+    <MESSAGE value="Fixed logic" />
+    <MESSAGE value="Update OnValueChange to only process if there is an output connection" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update OnValueChange to only process if there is an output connection" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/LiveSheet/LiveSheetLogic.cs</url>
-          <line>44</line>
-          <properties documentPath="C:\Users\Duinrahaic\RiderProjects\LiveSheet\LiveSheet\Parts\LiveSheet\LiveSheetLogic.cs" containingFunctionPresentation="Method 'OnValueChanged'" />
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/LiveSheet/LiveSheetLogic.cs</url>
-          <line>70</line>
-          <properties documentPath="C:\Users\Duinrahaic\RiderProjects\LiveSheet\LiveSheet\Parts\LiveSheet\LiveSheetLogic.cs" containingFunctionPresentation="Method 'OnLinkTargetChanged'" />
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
